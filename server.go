@@ -12,6 +12,7 @@ import (
 )
 
 const defaultPort = "8080"
+const defaultHost = "localhost"
 
 func main() {
 	// env stuff
@@ -25,12 +26,20 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
+	host := os.Getenv("HOST")
+	if host == "" {
+		host = defaultHost
+	}
 
-	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	srv := handler.NewDefaultServer(
+		graph.NewExecutableSchema(
+			graph.Config{Resolvers: &graph.Resolver{}},
+		),
+	)
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
 
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
+	log.Printf("connect to http://%s:%s/ for GraphQL playground", host, port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
