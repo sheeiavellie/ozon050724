@@ -2,25 +2,41 @@
 
 package model
 
+type Comment struct {
+	ID            int        `json:"id"`
+	PostID        int        `json:"postId"`
+	AuthorID      *int       `json:"authorId,omitempty"`
+	Content       string     `json:"content"`
+	CreatedAt     string     `json:"createdAt"`
+	ReplyComments []*Comment `json:"replyComments"`
+}
+
 type Mutation struct {
 }
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type NewComment struct {
+	PostID          int    `json:"postId"`
+	AuthorID        *int   `json:"authorId,omitempty"`
+	Content         string `json:"content"`
+	ParentCommentID *int   `json:"parentCommentId,omitempty"`
+}
+
+type NewPost struct {
+	Title          string `json:"title"`
+	AuthorID       *int   `json:"authorId,omitempty"`
+	Content        string `json:"content"`
+	CanBeCommented bool   `json:"canBeCommented"`
+}
+
+type Post struct {
+	ID             int        `json:"id"`
+	Title          string     `json:"title"`
+	AuthorID       *int       `json:"authorId,omitempty"`
+	Content        string     `json:"content"`
+	CreatedAt      string     `json:"createdAt"`
+	CanBeCommented bool       `json:"canBeCommented"`
+	Comments       []*Comment `json:"comments,omitempty"`
 }
 
 type Query struct {
-}
-
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
-}
-
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
 }
