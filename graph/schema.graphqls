@@ -1,28 +1,49 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
-
-type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
+type Post {
+    id: Int!
+    title: String!
+    authorId: Int
+    content: String!
+    createdAt: String!
+    canBeCommented: Boolean!
+    comments: [Comment!]
 }
 
-type User {
-  id: ID!
-  name: String!
+type Comment {
+    id: Int!
+    postId: Int!
+    authorId: Int
+    content: String!
+    createdAt: String!
+    replyComments: [Comment!]!
 }
 
 type Query {
-  todos: [Todo!]!
+    post(id: Int!): Post!
+    posts: [Post!]!
+
+    comment(id: Int!): Comment!
+    comments(postId: Int!): [Comment!]!
 }
 
-input NewTodo {
-  text: String!
-  userId: String!
+input NewPost {
+    title: String!
+    authorId: Int
+    content: String!
+    canBeCommented: Boolean!
+}
+
+input NewComment {
+    postId: Int!
+    authorId: Int
+    content: String!
+    parentCommentId: Int
 }
 
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
+    createPost(input: NewPost!): Post!
+    createComment(input: NewComment!): Comment!
+
+    # I assume it's necessary because user can disable commenting
+    updatePost(postId: Int!): Post! 
 }
+
