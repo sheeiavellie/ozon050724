@@ -9,6 +9,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/joho/godotenv"
 	"github.com/sheeiavellie/ozon050724/graph"
+	"github.com/sheeiavellie/ozon050724/storage"
 )
 
 const defaultPort = "8080"
@@ -30,8 +31,17 @@ func main() {
 		host = defaultHost
 	}
 
+	// str selection
+	var str storage.Storage
+
+	postgresStorage, err := storage.NewPostgresStorage()
+	if err != nil {
+		return
+	}
+	str = postgresStorage
+
 	// server set up
-	resolver := graph.NewResolver()
+	resolver := graph.NewResolver(str)
 
 	srv := handler.NewDefaultServer(
 		graph.NewExecutableSchema(
