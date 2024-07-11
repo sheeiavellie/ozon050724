@@ -39,11 +39,18 @@ input NewComment {
     parentCommentId: Int
 }
 
+input UpdatePost {
+    id: Int!
+    title: String
+    content: String
+    canBeCommented: Boolean
+}
+
 type Mutation {
     createPost(input: NewPost!): Post!
     createComment(input: NewComment!): Comment!
 
     # I assume it's necessary because user can disable commenting
-    updatePost(postId: Int!): Post! 
+    updatePost(input: UpdatePost!): Post! 
 }
 
