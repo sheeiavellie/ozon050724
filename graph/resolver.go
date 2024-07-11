@@ -1,7 +1,13 @@
 package graph
 
-// This file will not be regenerated automatically.
-//
-// It serves as dependency injection for your app, add any dependencies you require here.
+import "github.com/sheeiavellie/ozon050724/storage"
 
-type Resolver struct{}
+type resolver struct {
+	storage storage.Storage
+}
+
+func NewResolver(storage storage.Storage) *resolver {
+	return &resolver{
+		storage: storage,
+	}
+}

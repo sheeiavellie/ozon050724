@@ -21,7 +21,6 @@ func main() {
 		log.Fatal("Error loading .env file")
 		return
 	}
-
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
@@ -31,9 +30,12 @@ func main() {
 		host = defaultHost
 	}
 
+	// server set up
+	resolver := graph.NewResolver()
+
 	srv := handler.NewDefaultServer(
 		graph.NewExecutableSchema(
-			graph.Config{Resolvers: &graph.Resolver{}},
+			graph.Config{Resolvers: resolver},
 		),
 	)
 
