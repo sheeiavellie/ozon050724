@@ -22,7 +22,7 @@ func (r *mutationResolver) CreateComment(ctx context.Context, input model.NewCom
 }
 
 // UpdatePost is the resolver for the updatePost field.
-func (r *mutationResolver) UpdatePost(ctx context.Context, postID int) (*model.Post, error) {
+func (r *mutationResolver) UpdatePost(ctx context.Context, input model.UpdatePost) (*model.Post, error) {
 	panic(fmt.Errorf("not implemented: UpdatePost - updatePost"))
 }
 
@@ -47,10 +47,10 @@ func (r *queryResolver) Comments(ctx context.Context, postID int) ([]*model.Comm
 }
 
 // Mutation returns MutationResolver implementation.
-func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
+func (r *resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
 // Query returns QueryResolver implementation.
-func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
+func (r *resolver) Query() QueryResolver { return &queryResolver{r} }
 
-type mutationResolver struct{ *Resolver }
-type queryResolver struct{ *Resolver }
+type mutationResolver struct{ *resolver }
+type queryResolver struct{ *resolver }

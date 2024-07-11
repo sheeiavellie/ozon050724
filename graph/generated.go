@@ -59,7 +59,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		CreateComment func(childComplexity int, input model.NewComment) int
 		CreatePost    func(childComplexity int, input model.NewPost) int
-		UpdatePost    func(childComplexity int, postID int) int
+		UpdatePost    func(childComplexity int, input model.UpdatePost) int
 	}
 
 	Post struct {
@@ -83,7 +83,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	CreatePost(ctx context.Context, input model.NewPost) (*model.Post, error)
 	CreateComment(ctx context.Context, input model.NewComment) (*model.Comment, error)
-	UpdatePost(ctx context.Context, postID int) (*model.Post, error)
+	UpdatePost(ctx context.Context, input model.UpdatePost) (*model.Post, error)
 }
 type QueryResolver interface {
 	Post(ctx context.Context, id int) (*model.Post, error)
@@ -187,7 +187,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdatePost(childComplexity, args["postId"].(int)), true
+		return e.complexity.Mutation.UpdatePost(childComplexity, args["input"].(model.UpdatePost)), true
 
 	case "Post.authorId":
 		if e.complexity.Post.AuthorID == nil {
@@ -291,6 +291,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputNewComment,
 		ec.unmarshalInputNewPost,
+		ec.unmarshalInputUpdatePost,
 	)
 	first := true
 
@@ -440,15 +441,15 @@ func (ec *executionContext) field_Mutation_createPost_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_updatePost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 int
-	if tmp, ok := rawArgs["postId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("postId"))
-		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+	var arg0 model.UpdatePost
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePost2githubᚗcomᚋsheeiavellieᚋozon050724ᚋgraphᚋmodelᚐUpdatePost(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["postId"] = arg0
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -979,7 +980,7 @@ func (ec *executionContext) _Mutation_updatePost(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdatePost(rctx, fc.Args["postId"].(int))
+		return ec.resolvers.Mutation().UpdatePost(rctx, fc.Args["input"].(model.UpdatePost))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3619,6 +3620,54 @@ func (ec *executionContext) unmarshalInputNewPost(ctx context.Context, obj inter
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdatePost(ctx context.Context, obj interface{}) (model.UpdatePost, error) {
+	var it model.UpdatePost
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "title", "content", "canBeCommented"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Title = data
+		case "content":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Content = data
+		case "canBeCommented":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("canBeCommented"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CanBeCommented = data
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -4447,6 +4496,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNUpdatePost2githubᚗcomᚋsheeiavellieᚋozon050724ᚋgraphᚋmodelᚐUpdatePost(ctx context.Context, v interface{}) (model.UpdatePost, error) {
+	res, err := ec.unmarshalInputUpdatePost(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

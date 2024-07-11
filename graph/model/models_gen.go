@@ -40,3 +40,10 @@ type Post struct {
 
 type Query struct {
 }
+
+type UpdatePost struct {
+	ID             int     `json:"id"`
+	Title          *string `json:"title,omitempty"`
+	Content        *string `json:"content,omitempty"`
+	CanBeCommented *bool   `json:"canBeCommented,omitempty"`
+}
