@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
@@ -31,14 +32,24 @@ func main() {
 		host = defaultHost
 	}
 
+	// root context
+	ctx := context.Background()
+
 	// str selection
 	var str storage.Storage
 
-	postgresStorage, err := storage.NewPostgresStorage()
-	if err != nil {
-		return
+	// ^by default store in memory
+	if true {
+		psConnStr := ""
+		postgresStorage, err := storage.NewPostgresStorage(ctx, psConnStr)
+		if err != nil {
+			return
+		}
+		defer postgresStorage.Close()
+		postgresStorage.Init(ctx)
+
+		str = postgresStorage
 	}
-	str = postgresStorage
 
 	// server set up
 	resolver := graph.NewResolver(str)
